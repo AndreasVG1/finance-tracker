@@ -7,19 +7,22 @@ public class TransactionDTO {
     private Double amount;
     private String comment;
     private LocalDate transaction_date;
-    private AccountDTO account;
-    private CategoryDTO category;
-    private Transaction_Type transaction_type;
-    private Saving_GoalDTO saving_goal;
+    private Long accountId;
+    private Long categoryId;
+    private Long transaction_typeId;
+    private Long saving_goalId;
 
     public TransactionDTO() {}
 
-    public TransactionDTO(Long id, Double amount, String comment, LocalDate transaction_date, Transaction_Type transaction_type) {
+    public TransactionDTO(Long id, Double amount, String comment, LocalDate transaction_date, Long accountId, Long categoryId, Long transaction_typeId, Long saving_goalId) {
         this.id = id;
         this.amount = amount;
         this.comment = comment;
         this.transaction_date = transaction_date;
-        this.transaction_type = transaction_type;
+        this.accountId = accountId;
+        this.categoryId = categoryId;
+        this.transaction_typeId = transaction_typeId;
+        this.saving_goalId = saving_goalId;
     }
 
     public Long getId() {
@@ -54,35 +57,35 @@ public class TransactionDTO {
         this.transaction_date = transaction_date;
     }
 
-    public AccountDTO getAccount() {
-        return account;
+    public Long getAccountId() {
+        return accountId;
     }
 
-    public void setAccount(AccountDTO account) {
-        this.account = account;
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
     }
 
-    public CategoryDTO getCategory() {
-        return category;
+    public Long getCategoryId() {
+        return categoryId;
     }
 
-    public void setCategory(CategoryDTO category) {
-        this.category = category;
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public Transaction_Type getTransaction_type() {
-        return transaction_type;
+    public Long getTransaction_typeId() {
+        return transaction_typeId;
     }
 
-    public void setTransaction_type(Transaction_Type transaction_type) {
-        this.transaction_type = transaction_type;
+    public void setTransaction_typeId(Long transaction_typeId) {
+        this.transaction_typeId = transaction_typeId;
     }
 
-    public Saving_GoalDTO getSaving_goal() {
-        return saving_goal;
+    public Long getSaving_goalId() {
+        return saving_goalId;
     }
 
-    public void setSaving_goal(Saving_GoalDTO saving_goal) {
-        this.saving_goal = saving_goal;
+    public void setSaving_goalId(Long saving_goalId) {
+        this.saving_goalId = saving_goalId;
     }
 }

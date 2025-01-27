@@ -111,4 +111,17 @@ public class Transaction {
     public void setSaving_goal(Saving_Goal saving_goal) {
         this.saving_goal = saving_goal;
     }
+
+    public TransactionDTO convertToDTO() {
+        TransactionDTO transactionDTO = new TransactionDTO();
+        transactionDTO.setId(id);
+        transactionDTO.setAmount(amount);
+        transactionDTO.setComment(comment);
+        transactionDTO.setTransaction_date(transaction_date);
+        transactionDTO.setAccountId(account.getId());
+        transactionDTO.setCategoryId(category.getId());
+        transactionDTO.setTransaction_typeId(transaction_type.getId());
+        transactionDTO.setSaving_goalId(saving_goal != null ? saving_goal.getId() : null);
+        return transactionDTO;
+    }
 }

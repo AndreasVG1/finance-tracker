@@ -14,21 +14,21 @@ public class Currency {
     @Column(nullable = false)
     private String currency_name;
 
-    @Column(nullable = false, length = 5)
-    private String currency_code;
+    @Column(name = "currency_code", nullable = false, length = 5)
+    private String code;
 
-    @Column(nullable = false, length = 1)
-    private String currency_symbol;
+    @Column(name = "currency_symbol", nullable = false, length = 1)
+    private String symbol;
 
     @OneToMany(mappedBy = "currency", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Account> accounts;
 
     public Currency() {}
 
-    public Currency(String currency_name, String currency_code, String currency_symbol) {
+    public Currency(String currency_name, String code, String symbol) {
         this.currency_name = currency_name;
-        this.currency_code = currency_code;
-        this.currency_symbol = currency_symbol;
+        this.code = code;
+        this.symbol = symbol;
     }
 
     public Long getId() {
@@ -47,20 +47,20 @@ public class Currency {
         this.currency_name = currency_name;
     }
 
-    public String getCurrency_code() {
-        return currency_code;
+    public String getCode() {
+        return code;
     }
 
-    public void setCurrency_code(String currency_code) {
-        this.currency_code = currency_code;
+    public void setCode(String currency_code) {
+        this.code = currency_code;
     }
 
-    public String getCurrency_symbol() {
-        return currency_symbol;
+    public String getSymbol() {
+        return symbol;
     }
 
-    public void setCurrency_symbol(String currency_symbol) {
-        this.currency_symbol = currency_symbol;
+    public void setSymbol(String currency_symbol) {
+        this.symbol = currency_symbol;
     }
 
     public List<Account> getAccounts() {
@@ -69,5 +69,15 @@ public class Currency {
 
     public void setAccounts(List<Account> accounts) {
         this.accounts = accounts;
+    }
+
+    public CurrencyDTO convertToDTO() {
+        CurrencyDTO currencyDTO = new CurrencyDTO();
+        currencyDTO.setId(id);
+        currencyDTO.setCurrency_name(currency_name);
+        currencyDTO.setCurrency_code(code);
+        currencyDTO.setCurrency_symbol(symbol);
+        currencyDTO.setAccounts(accounts.stream().map(Account::convertToDTO).toList());
+        return currencyDTO;
     }
 }

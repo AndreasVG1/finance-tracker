@@ -119,4 +119,18 @@ public class Account {
     public void setSaving_goals(List<Saving_Goal> saving_goals) {
         this.saving_goals = saving_goals;
     }
+
+    public AccountDTO convertToDTO() {
+        AccountDTO accountDTO = new AccountDTO();
+        accountDTO.setId(id);
+        accountDTO.setFull_name(full_name);
+        accountDTO.setEmail(email);
+        accountDTO.setPassword(password);
+        accountDTO.setRegistration_date(registration_date);
+        accountDTO.setLast_login(last_login);
+        accountDTO.setCurrency(currency.getCode());
+        accountDTO.setTransactions(transactions.stream().map(Transaction::convertToDTO).toList());
+        accountDTO.setSaving_goals(saving_goals.stream().map(Saving_Goal::convertToDTO).toList());
+        return accountDTO;
+    }
 }

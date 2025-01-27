@@ -46,4 +46,12 @@ public class Category {
     public void setTransactions(List<Transaction> transactions) {
         this.transactions = transactions;
     }
+
+    public CategoryDTO convertToDTO() {
+        CategoryDTO categoryDTO = new CategoryDTO();
+        categoryDTO.setId(id);
+        categoryDTO.setCategory_name(category_name);
+        categoryDTO.setTransactions(transactions.stream().map(Transaction::convertToDTO).toList());
+        return categoryDTO;
+    }
 }

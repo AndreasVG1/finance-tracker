@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Saving_GoalDTO {
     private Long id;
-    private Account account;
+    private Long accountId;
     private String goal_title;
     private Double goal_amount;
     private Double balance;
@@ -16,9 +16,9 @@ public class Saving_GoalDTO {
 
     public Saving_GoalDTO() {}
 
-    public Saving_GoalDTO(Long id, Account account, String goal_title, Double goal_amount, Double balance, LocalDate due_date, Boolean is_completed, LocalDate completed_date) {
+    public Saving_GoalDTO(Long id, Long accountId, String goal_title, Double goal_amount, Double balance, LocalDate due_date, Boolean is_completed, LocalDate completed_date) {
         this.id = id;
-        this.account = account;
+        this.accountId = accountId;
         this.goal_title = goal_title;
         this.goal_amount = goal_amount;
         this.balance = balance;
@@ -35,12 +35,12 @@ public class Saving_GoalDTO {
         this.id = id;
     }
 
-    public Account getAccount() {
-        return account;
+    public Long getAccountId() {
+        return accountId;
     }
 
-    public void setAccount(Account account) {
-        this.account = account;
+    public void setAccountId(Long accountId) {
+        this.accountId = accountId;
     }
 
     public String getGoal_title() {

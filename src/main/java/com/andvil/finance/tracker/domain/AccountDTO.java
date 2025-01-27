@@ -9,22 +9,22 @@ public class AccountDTO {
     private String full_name;
     private String email;
     private String password;
-    private Long currencyId;
-    private LocalDate registered_at;
+    private String currency;
+    private LocalDate registration_date;
     private LocalDate last_login;
     private List<Saving_GoalDTO> saving_goals;
     private List<TransactionDTO> transactions;
 
     public AccountDTO() {}
 
-    public AccountDTO(Long id, String full_name, String email, String password, Long currencyId,
-                      LocalDate registered_at, LocalDate last_login) {
+    public AccountDTO(Long id, String full_name, String email, String password, String currency,
+                      LocalDate registration_date, LocalDate last_login) {
         this.id = id;
         this.full_name = full_name;
         this.email = email;
         this.password = password;
-        this.currencyId = currencyId;
-        this.registered_at = registered_at;
+        this.currency = currency;
+        this.registration_date = registration_date;
         this.last_login = last_login;
     }
 
@@ -60,20 +60,20 @@ public class AccountDTO {
         this.password = password;
     }
 
-    public Long getCurrencyId() {
-        return currencyId;
+    public String getCurrency() {
+        return currency;
     }
 
-    public void setCurrencyId(Long currencyId) {
-        this.currencyId = currencyId;
+    public void setCurrency(String currency) {
+        this.currency = currency;
     }
 
-    public LocalDate getRegistered_at() {
-        return registered_at;
+    public LocalDate getRegistration_date() {
+        return registration_date;
     }
 
-    public void setRegistered_at(LocalDate registered_at) {
-        this.registered_at = registered_at;
+    public void setRegistration_date(LocalDate registration_date) {
+        this.registration_date = registration_date;
     }
 
     public LocalDate getLast_login() {

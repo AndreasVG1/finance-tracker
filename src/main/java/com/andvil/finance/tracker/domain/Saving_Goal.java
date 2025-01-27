@@ -119,4 +119,18 @@ public class Saving_Goal {
     public void setTransactions(List<Transaction> transactions) {
         this.transactions = transactions;
     }
+
+    public Saving_GoalDTO convertToDTO() {
+        Saving_GoalDTO dto = new Saving_GoalDTO();
+        dto.setId(id);
+        dto.setAccountId(account.getId());
+        dto.setGoal_title(goal_title);
+        dto.setGoal_amount(goal_amount);
+        dto.setBalance(balance);
+        dto.setDue_date(due_date);
+        dto.setIs_completed(is_completed);
+        dto.setCompleted_date(completed_date);
+        dto.setTransactions(transactions.stream().map(Transaction::convertToDTO).toList());
+        return dto;
+    }
 }
