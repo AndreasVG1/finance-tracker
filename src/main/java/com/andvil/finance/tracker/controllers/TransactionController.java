@@ -58,6 +58,7 @@ public class TransactionController {
         Transaction_Type type = transactionTypeRepository.findById(transactionDTO.getTransaction_typeId()).orElse(null);
         Category category = categoryRepository.findById(transactionDTO.getCategoryId()).orElse(null);
         Saving_Goal goal = null;
+
         if (transactionDTO.getSaving_goalId() != null) {
             goal = savingGoalRepository.findById(transactionDTO.getSaving_goalId()).orElse(null);
         }
@@ -87,6 +88,10 @@ public class TransactionController {
         transaction.setSaving_goal(goal);
         transaction.setComment(transactionDTO.getComment());
         transaction.setTransaction_date(transactionDTO.getTransaction_date() != null ? transactionDTO.getTransaction_date() : LocalDate.now());
+
+        if (goal != null) {
+            goal.setBalance(goal.getBalance() + transaction.getAmount());
+        }
 
         Transaction savedTransaction = transactionService.createTransaction(transaction);
 

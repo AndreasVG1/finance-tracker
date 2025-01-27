@@ -10,7 +10,7 @@ public class Saving_GoalDTO {
     private Double goal_amount;
     private Double balance;
     private LocalDate due_date;
-    private Boolean is_completed;
+    private Boolean is_completed = false;
     private LocalDate completed_date;
     private List<TransactionDTO> transactions;
 

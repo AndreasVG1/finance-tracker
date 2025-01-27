@@ -61,8 +61,8 @@ public class AccountController {
         account.setPassword(accountDTO.getPassword());
         account.setRegistration_date(LocalDate.now());
         account.setCurrency(currency);
-        account.setTransactions(new ArrayList<Transaction>());
-        account.setSaving_goals(new ArrayList<Saving_Goal>());
+        account.setTransactions(new ArrayList<>());
+        account.setSaving_goals(new ArrayList<>());
 
         Account savedAccount = accountService.createAccount(account);
 
