@@ -1,12 +1,20 @@
 package com.andvil.finance.tracker.domain;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
+import org.springframework.lang.NonNull;
+
 import java.time.LocalDate;
 import java.util.List;
 
 public class Saving_GoalDTO {
     private Long id;
+    @NonNull
     private Long accountId;
+    @NotEmpty(message = "A title must be provided")
+    @Size(min= 2, max = 250)
     private String goal_title;
+    @NonNull
     private Double goal_amount;
     private Double balance;
     private LocalDate due_date;
@@ -14,9 +22,14 @@ public class Saving_GoalDTO {
     private LocalDate completed_date;
     private List<TransactionDTO> transactions;
 
-    public Saving_GoalDTO() {}
+    public Saving_GoalDTO() {
+        accountId = 0L;
+        goal_amount = 0.0;
+    }
 
-    public Saving_GoalDTO(Long id, Long accountId, String goal_title, Double goal_amount, Double balance, LocalDate due_date, Boolean is_completed, LocalDate completed_date) {
+    public Saving_GoalDTO(Long id, @NonNull Long accountId, String goal_title,
+                          @NonNull Double goal_amount, Double balance, LocalDate due_date,
+                          Boolean is_completed, LocalDate completed_date) {
         this.id = id;
         this.accountId = accountId;
         this.goal_title = goal_title;

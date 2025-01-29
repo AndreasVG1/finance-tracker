@@ -1,15 +1,25 @@
 package com.andvil.finance.tracker.domain;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
+
 import java.util.List;
 
 public class CurrencyDTO {
     private Long id;
+    @NotEmpty(message = "Currency name must be provided")
+    @Size(max = 250)
     private String currency_name;
+    @NotEmpty(message = "Currency code must be provided")
+    @Size(max = 5)
     private String currency_code;
+    @NotEmpty(message = "Currency symbol must be provided")
+    @Size(max = 1)
     private String currency_symbol;
     private List<AccountDTO> accounts;
 
-    public CurrencyDTO() {}
+    public CurrencyDTO() {
+    }
 
     public CurrencyDTO(Long id, String currency_name, String currency_code, String currency_symbol, List<AccountDTO> accounts) {
         this.id = id;

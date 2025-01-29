@@ -1,9 +1,14 @@
 package com.andvil.finance.tracker.domain;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
+
 import java.util.List;
 
 public class CategoryDTO {
     private Long id;
+    @NotEmpty(message = "A category name must be provided")
+    @Size(min = 2, max = 50)
     private String category_name;
     private List<TransactionDTO> transactions;
 

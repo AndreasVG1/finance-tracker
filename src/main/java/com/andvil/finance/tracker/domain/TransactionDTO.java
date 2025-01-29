@@ -1,20 +1,36 @@
 package com.andvil.finance.tracker.domain;
 
+
+import jakarta.validation.constraints.Size;
+import org.springframework.lang.NonNull;
+
 import java.time.LocalDate;
 
 public class TransactionDTO {
     private Long id;
+    @NonNull
     private Double amount;
+    @Size(max = 250)
     private String comment;
     private LocalDate transaction_date;
+    @NonNull
     private Long accountId;
+    @NonNull
     private Long categoryId;
+    @NonNull
     private Long transaction_typeId;
     private Long saving_goalId;
 
-    public TransactionDTO() {}
+    public TransactionDTO() {
+        amount = 0.0;
+        accountId = 0L;
+        categoryId = 0L;
+        transaction_typeId = 0L;
+    }
 
-    public TransactionDTO(Long id, Double amount, String comment, LocalDate transaction_date, Long accountId, Long categoryId, Long transaction_typeId, Long saving_goalId) {
+    public TransactionDTO(Long id, @NonNull Double amount, String comment, LocalDate transaction_date,
+                          @NonNull Long accountId, @NonNull Long categoryId,
+                          @NonNull Long transaction_typeId, Long saving_goalId) {
         this.id = id;
         this.amount = amount;
         this.comment = comment;

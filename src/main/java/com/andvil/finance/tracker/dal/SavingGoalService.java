@@ -1,10 +1,12 @@
 package com.andvil.finance.tracker.dal;
 
+import com.andvil.finance.tracker.domain.Account;
 import com.andvil.finance.tracker.domain.Saving_Goal;
 import com.andvil.finance.tracker.domain.Saving_GoalDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,5 +72,17 @@ public class SavingGoalService {
         }
         goal.setTransactions(goal.getTransactions());
         return goalRepository.save(goal);
+    }
+
+    public Saving_Goal createFromDTO(Account account, Saving_GoalDTO goalDTO) {
+        Saving_Goal goal = new Saving_Goal();
+        goal.setAccount(account);
+        goal.setGoal_amount(goalDTO.getGoal_amount());
+        goal.setGoal_title(goalDTO.getGoal_title());
+        goal.setBalance(goalDTO.getBalance());
+        goal.setDue_date(goalDTO.getDue_date());
+        goal.setIs_completed(goalDTO.getIs_completed());
+        goal.setTransactions(new ArrayList<>());
+        return createGoal(goal);
     }
 }

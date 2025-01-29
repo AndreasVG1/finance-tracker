@@ -1,14 +1,26 @@
 package com.andvil.finance.tracker.domain;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
+
 import java.time.LocalDate;
 import java.util.List;
 
 public class AccountDTO {
 
     private Long id;
+    @NotEmpty(message = "Full name must be provided")
+    @Size(min = 2, max = 100)
     private String full_name;
+    @Email(message = "Email is not valid", regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
+    @NotEmpty(message = "Email must be provided")
+    @Size(min = 2, max = 100)
     private String email;
+    @NotEmpty(message = "A password is required")
+    @Size(min = 6, max = 50)
     private String password;
+    @NotEmpty(message = "Currency must be provided")
     private String currency;
     private LocalDate registration_date;
     private LocalDate last_login;

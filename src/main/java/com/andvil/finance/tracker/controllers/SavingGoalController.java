@@ -1,31 +1,28 @@
 package com.andvil.finance.tracker.controllers;
 
-import com.andvil.finance.tracker.dal.AccountService;
+import com.andvil.finance.tracker.ResourceNotFoundException;
+import com.andvil.finance.tracker.dal.AccountRepository;
 import com.andvil.finance.tracker.dal.SavingGoalService;
 import com.andvil.finance.tracker.domain.Account;
 import com.andvil.finance.tracker.domain.Saving_Goal;
 import com.andvil.finance.tracker.domain.Saving_GoalDTO;
-import com.andvil.finance.tracker.domain.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/goals")
 public class SavingGoalController {
 
     private final SavingGoalService goalService;
-    private final AccountService accountService;
+    private final AccountRepository accountRepository;
 
     @Autowired
-    public SavingGoalController(final SavingGoalService goalService, AccountService accountService) {
+    public SavingGoalController(final SavingGoalService goalService, AccountRepository accountRepository) {
         this.goalService = goalService;
-        this.accountService = accountService;
+        this.accountRepository = accountRepository;
     }
 
     @GetMapping
@@ -38,42 +35,33 @@ public class SavingGoalController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Saving_GoalDTO> getGoalById(@PathVariable Long id) {
-        Optional<Saving_Goal> goal = goalService.getGoal(id);
-
-        if (goal.isPresent()) {
-            Saving_Goal g = goal.get();
-            Saving_GoalDTO goalDTO = g.convertToDTO();
-            return ResponseEntity.ok(goalDTO);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        Saving_Goal goal = goalService.getGoal(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Saving Goal with ID " + id + " not found"));
+        return ResponseEntity.ok(goal.convertToDTO());
     }
 
     @PostMapping
     public ResponseEntity<Saving_GoalDTO> createGoal(@RequestBody Saving_GoalDTO goalDTO) {
-        Account account = accountService.getAccount(goalDTO.getAccountId()).orElse(null);
+        try {
+            Account account = Utilities.findByIdOrThrow(goalDTO.getAccountId(), accountRepository, "Account");
 
-        if (account == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(goalDTO);
+            Saving_Goal goal = goalService.createFromDTO(account, goalDTO);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(goal.convertToDTO());
+
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(goalDTO);
         }
-
-        Saving_Goal goal = new Saving_Goal();
-        goal.setAccount(account);
-        goal.setGoal_amount(goalDTO.getGoal_amount());
-        goal.setGoal_title(goalDTO.getGoal_title());
-        goal.setBalance(goalDTO.getBalance());
-        goal.setDue_date(goalDTO.getDue_date());
-        goal.setIs_completed(goalDTO.getIs_completed());
-        goal.setTransactions(new ArrayList<>());
-
-        Saving_Goal savedGoal = goalService.createGoal(goal);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedGoal.convertToDTO());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteGoal(@PathVariable Long id) {
-        goalService.deleteGoal(id);
-        return ResponseEntity.noContent().build();
+        Saving_Goal goal = goalService.getGoal(id).orElse(null);
+        if (goal != null) {
+            goalService.deleteGoal(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 }

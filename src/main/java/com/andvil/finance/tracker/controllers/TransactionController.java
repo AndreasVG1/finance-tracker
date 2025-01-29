@@ -1,15 +1,13 @@
 package com.andvil.finance.tracker.controllers;
 
+import com.andvil.finance.tracker.ResourceNotFoundException;
 import com.andvil.finance.tracker.dal.*;
 import com.andvil.finance.tracker.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/transactions")
@@ -41,66 +39,38 @@ public class TransactionController {
 
     @GetMapping("/{id}")
     public ResponseEntity<TransactionDTO> getTransactionById(@PathVariable Long id) {
-        Optional<Transaction> transaction = transactionService.getTransaction(id);
-
-        if (transaction.isPresent()) {
-            Transaction t = transaction.get();
-            TransactionDTO transactionDTO = t.convertToDTO();
-            return ResponseEntity.ok(transactionDTO);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        Transaction transaction = transactionService.getTransaction(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Transaction with ID " + id + " not found"));
+        return ResponseEntity.ok(transaction.convertToDTO());
     }
 
     @PostMapping
     public ResponseEntity<TransactionDTO> createTransaction(@RequestBody TransactionDTO transactionDTO) {
-        Account account = accountRepository.findById(transactionDTO.getAccountId()).orElse(null);
-        Transaction_Type type = transactionTypeRepository.findById(transactionDTO.getTransaction_typeId()).orElse(null);
-        Category category = categoryRepository.findById(transactionDTO.getCategoryId()).orElse(null);
-        Saving_Goal goal = null;
+        try {
+            Account account = Utilities.findByIdOrThrow(transactionDTO.getAccountId(), accountRepository, "Account");
+            Transaction_Type type = Utilities.findByIdOrThrow(transactionDTO.getTransaction_typeId(), transactionTypeRepository, "Transaction Type");
+            Category category = Utilities.findByIdOrThrow(transactionDTO.getCategoryId(), categoryRepository, "Category");
+            Saving_Goal goal = transactionDTO.getSaving_goalId() != null
+                    ? Utilities.findByIdOrThrow(transactionDTO.getSaving_goalId(), savingGoalRepository, "Saving Goal")
+                    : null;
 
-        if (transactionDTO.getSaving_goalId() != null) {
-            goal = savingGoalRepository.findById(transactionDTO.getSaving_goalId()).orElse(null);
-        }
+            Transaction transaction = transactionService.createFromDTO(transactionDTO, account, category, goal, type);
 
-        if (account == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(transactionDTO);
-        }
-        if (type == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(transactionDTO);
-        }
-        if (category == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(transactionDTO);
-        }
-        if (transactionDTO.getSaving_goalId() != null && goal == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(transactionDTO);
-        }
+            return ResponseEntity.status(HttpStatus.CREATED).body(transaction.convertToDTO());
 
-        Transaction transaction = new Transaction();
-        transaction.setAmount(transactionDTO.getAmount());
-        transaction.setCategory(category);
-        transaction.setAccount(account);
-        transaction.setTransaction_type(type);
-        transaction.setSaving_goal(goal);
-        transaction.setComment(transactionDTO.getComment());
-        transaction.setTransaction_date(transactionDTO.getTransaction_date() != null ? transactionDTO.getTransaction_date() : LocalDate.now());
-
-        if (goal != null) {
-            goal.setBalance(goal.getBalance() + transaction.getAmount());
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(transactionDTO);
         }
-
-        Transaction savedTransaction = transactionService.createTransaction(transaction);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedTransaction.convertToDTO());
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTransaction(@PathVariable Long id) {
-        transactionService.deleteTransaction(id);
-        return ResponseEntity.noContent().build();
+        Transaction transaction = transactionService.getTransaction(id).orElse(null);
+        if (transaction != null) {
+            transactionService.deleteTransaction(id);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 }
