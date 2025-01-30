@@ -24,19 +24,19 @@ public class AccountController {
     }
 
     @GetMapping
-    public ResponseEntity<List<AccountDTO>> getAllAccounts() {
+    public ResponseEntity<List<AccountDTO>> getAllAccounts()     {
         List<Account> accounts = accountService.getAllAccounts();
 
         List<AccountDTO> accountDTOs = accounts.stream().map(Account::convertToDTO).toList();
 
-        return ResponseEntity.ok(accountDTOs);
+        return ResponseEntity.status(HttpStatus.OK).body(accountDTOs);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<AccountDTO> getAccountById(@PathVariable Long id) {
         Account account = accountService.getAccount(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Account with ID " + id + " not found"));
-        return ResponseEntity.ok(account.convertToDTO());
+        return ResponseEntity.status(HttpStatus.OK).body(account.convertToDTO());
     }
 
     @PostMapping

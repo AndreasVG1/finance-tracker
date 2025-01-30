@@ -34,14 +34,14 @@ public class TransactionController {
 
         List<TransactionDTO> transactionDTOs = transactions.stream().map(Transaction::convertToDTO).toList();
 
-        return ResponseEntity.ok(transactionDTOs);
+        return ResponseEntity.status(HttpStatus.OK).body(transactionDTOs);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<TransactionDTO> getTransactionById(@PathVariable Long id) {
         Transaction transaction = transactionService.getTransaction(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Transaction with ID " + id + " not found"));
-        return ResponseEntity.ok(transaction.convertToDTO());
+        return ResponseEntity.status(HttpStatus.OK).body(transaction.convertToDTO());
     }
 
     @PostMapping

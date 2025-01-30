@@ -30,14 +30,14 @@ public class SavingGoalController {
         List<Saving_Goal> goals = goalService.getAllGoals();
 
         List<Saving_GoalDTO> goalDTOs = goals.stream().map(Saving_Goal::convertToDTO).toList();
-        return ResponseEntity.ok(goalDTOs);
+        return ResponseEntity.status(HttpStatus.OK).body(goalDTOs);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Saving_GoalDTO> getGoalById(@PathVariable Long id) {
         Saving_Goal goal = goalService.getGoal(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Saving Goal with ID " + id + " not found"));
-        return ResponseEntity.ok(goal.convertToDTO());
+        return ResponseEntity.status(HttpStatus.OK).body(goal.convertToDTO());
     }
 
     @PostMapping
