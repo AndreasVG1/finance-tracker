@@ -12,33 +12,33 @@ public class TransactionDTO {
     private Double amount;
     @Size(max = 250)
     private String comment;
-    private LocalDate transaction_date;
+    private LocalDate transactionDate;
     @NonNull
     private Long accountId;
     @NonNull
     private Long categoryId;
     @NonNull
-    private Long transaction_typeId;
-    private Long saving_goalId;
+    private Long transactionTypeId;
+    private Long savingGoalId;
 
     public TransactionDTO() {
         amount = 0.0;
         accountId = 0L;
         categoryId = 0L;
-        transaction_typeId = 0L;
+        transactionTypeId = 0L;
     }
 
-    public TransactionDTO(Long id, @NonNull Double amount, String comment, LocalDate transaction_date,
+    public TransactionDTO(Long id, @NonNull Double amount, String comment, LocalDate transactionDate,
                           @NonNull Long accountId, @NonNull Long categoryId,
-                          @NonNull Long transaction_typeId, Long saving_goalId) {
+                          @NonNull Long transactionTypeId, Long savingGoalId) {
         this.id = id;
         this.amount = amount;
         this.comment = comment;
-        this.transaction_date = transaction_date;
+        this.transactionDate = transactionDate;
         this.accountId = accountId;
         this.categoryId = categoryId;
-        this.transaction_typeId = transaction_typeId;
-        this.saving_goalId = saving_goalId;
+        this.transactionTypeId = transactionTypeId;
+        this.savingGoalId = savingGoalId;
     }
 
     public Long getId() {
@@ -49,11 +49,12 @@ public class TransactionDTO {
         this.id = id;
     }
 
+    @NonNull
     public Double getAmount() {
         return amount;
     }
 
-    public void setAmount(Double amount) {
+    public void setAmount(@NonNull Double amount) {
         this.amount = amount;
     }
 
@@ -65,43 +66,46 @@ public class TransactionDTO {
         this.comment = comment;
     }
 
-    public LocalDate getTransaction_date() {
-        return transaction_date;
+    public LocalDate getTransactionDate() {
+        return transactionDate;
     }
 
-    public void setTransaction_date(LocalDate transaction_date) {
-        this.transaction_date = transaction_date;
+    public void setTransactionDate(LocalDate transactionDate) {
+        this.transactionDate = transactionDate;
     }
 
+    @NonNull
     public Long getAccountId() {
         return accountId;
     }
 
-    public void setAccountId(Long accountId) {
+    public void setAccountId(@NonNull Long accountId) {
         this.accountId = accountId;
     }
 
+    @NonNull
     public Long getCategoryId() {
         return categoryId;
     }
 
-    public void setCategoryId(Long categoryId) {
+    public void setCategoryId(@NonNull Long categoryId) {
         this.categoryId = categoryId;
     }
 
-    public Long getTransaction_typeId() {
-        return transaction_typeId;
+    @NonNull
+    public Long getTransactionTypeId() {
+        return transactionTypeId;
     }
 
-    public void setTransaction_typeId(Long transaction_typeId) {
-        this.transaction_typeId = transaction_typeId;
+    public void setTransactionTypeId(@NonNull Long transactionTypeId) {
+        this.transactionTypeId = transactionTypeId;
     }
 
-    public Long getSaving_goalId() {
-        return saving_goalId;
+    public Long getSavingGoalId() {
+        return savingGoalId;
     }
 
-    public void setSaving_goalId(Long saving_goalId) {
-        this.saving_goalId = saving_goalId;
+    public void setSavingGoalId(Long savingGoalId) {
+        this.savingGoalId = savingGoalId;
     }
 }

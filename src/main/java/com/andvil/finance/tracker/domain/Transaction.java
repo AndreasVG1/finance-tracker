@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Table(name = "transactions")
 public class Transaction {
 
     @Id
@@ -16,8 +17,8 @@ public class Transaction {
 
     private String comment;
 
-    @Column(nullable = false)
-    private LocalDate transaction_date;
+    @Column(nullable = false, name = "transaction_date")
+    private LocalDate transactionDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "account_id", nullable = false)
@@ -37,11 +38,11 @@ public class Transaction {
 
     public Transaction() {}
 
-    public Transaction(Double amount, String comment, LocalDate transaction_date,
+    public Transaction(Double amount, String comment, LocalDate transactionDate,
                        Account account, Category category, Transaction_Type transaction_type, Saving_Goal saving_goal) {
         this.amount = amount;
         this.comment = comment;
-        this.transaction_date = transaction_date;
+        this.transactionDate = transactionDate;
         this.account = account;
         this.category = category;
         this.transaction_type = transaction_type;
@@ -72,12 +73,12 @@ public class Transaction {
         this.comment = comment;
     }
 
-    public LocalDate getTransaction_date() {
-        return transaction_date;
+    public LocalDate getTransactionDate() {
+        return transactionDate;
     }
 
-    public void setTransaction_date(LocalDate transaction_date) {
-        this.transaction_date = transaction_date;
+    public void setTransactionDate(LocalDate transaction_date) {
+        this.transactionDate = transaction_date;
     }
 
     public Account getAccount() {
@@ -117,11 +118,11 @@ public class Transaction {
         transactionDTO.setId(id);
         transactionDTO.setAmount(amount);
         transactionDTO.setComment(comment);
-        transactionDTO.setTransaction_date(transaction_date);
+        transactionDTO.setTransactionDate(transactionDate);
         transactionDTO.setAccountId(account.getId());
         transactionDTO.setCategoryId(category.getId());
-        transactionDTO.setTransaction_typeId(transaction_type.getId());
-        transactionDTO.setSaving_goalId(saving_goal != null ? saving_goal.getId() : null);
+        transactionDTO.setTransactionTypeId(transaction_type.getId());
+        transactionDTO.setSavingGoalId(saving_goal != null ? saving_goal.getId() : null);
         return transactionDTO;
     }
 }
