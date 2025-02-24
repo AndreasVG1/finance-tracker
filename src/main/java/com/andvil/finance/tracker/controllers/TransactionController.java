@@ -12,6 +12,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 @RestController
 @RequestMapping("/api/transactions")
 public class TransactionController {
@@ -35,9 +39,21 @@ public class TransactionController {
     public ResponseEntity<Page<TransactionDTO>> getTransactions(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "transactionDate,desc") String[] sort) {
+            @RequestParam(defaultValue = "transactionDate,desc") String sort) {
 
-        Sort sortConfig = Sort.by(Sort.Order.desc("transactionDate"));
+        List<Sort.Order> orders = new ArrayList<>();
+        String[] sortParams = sort.split(",");
+
+        if (sortParams.length > 0) {
+            String property = sortParams[0].trim();
+            Sort.Direction direction = (sortParams.length > 1 && sortParams[1].trim().equalsIgnoreCase("desc"))
+                    ? Sort.Direction.DESC
+                    : Sort.Direction.ASC;
+
+            orders.add(new Sort.Order(direction, property));
+        }
+
+        Sort sortConfig = Sort.by(orders);
 
         Pageable pageable = PageRequest.of(page, size, sortConfig);
 
@@ -83,5 +99,19 @@ public class TransactionController {
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<TransactionDTO> updateTransaction(@PathVariable Long id, @RequestBody TransactionDTO transactionDTO) {
+        Transaction existingTransaction = transactionService.getTransaction(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Transaction with ID " + id + " not found"));
+
+        if (!Objects.equals(transactionDTO.getId(), id)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(transactionDTO);
+        }
+
+        Transaction updatedTransaction = transactionService.updateTransaction(existingTransaction, transactionDTO);
+
+        return ResponseEntity.status(HttpStatus.OK).body(updatedTransaction.convertToDTO());
     }
 }
